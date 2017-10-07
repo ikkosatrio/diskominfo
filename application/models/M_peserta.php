@@ -1,25 +1,28 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class M_bidang extends CI_Model {
+class M_peserta extends CI_Model {
 
 	public $variable;
 
 	public function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
+		
 	}
-
 	function tampil_data($table){
 		$this->db->from($table);
+		$this->db->join('bidang','bidang.id_bidang=peserta.id_bidang');
 		return $query = $this->db->get();
 		// return $this->db->get($table);
 	}
 
 	function input_data($data,$table){
 		$this->db->insert($table,$data);
+		return $this->db->insert_id();
 	}
-	
+
 	function detail($where,$table){	
+		$this->db->join('bidang','bidang.id_bidang=bidang.id_bidang');
 		return $this->db->get_where($table,$where);
 	}
 
@@ -35,5 +38,5 @@ class M_bidang extends CI_Model {
 
 }
 
-/* End of file M_bidang.php */
-/* Location: ./application/models/M_bidang.php */
+/* End of file M_peserta.php */
+/* Location: ./application/models/M_peserta.php */

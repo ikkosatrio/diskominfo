@@ -15,7 +15,7 @@ Dashboard - Administrasi
 					<div class="breadcrumb-line">
 						<ul class="breadcrumb">
 							<li><a href="{{base_url('superuser')}}"><i class="icon-home2 position-left"></i> Home</a></li>
-							<li class="active"><a href="#">Artikel</a></li>
+							<li class="active"><a href="#">Peserta</a></li>
 						</ul>
 					</div>
 				</div>
@@ -28,7 +28,7 @@ Dashboard - Administrasi
 					<!-- Basic datatable -->
 					<div class="panel panel-flat">
 						<div class="panel-heading">
-							<h5 class="panel-title">Daftar Artikel</h5>
+							<h5 class="panel-title">Daftar Peserta</h5>
 							<div class="heading-elements">
 								<ul class="icons-list">
 			                		<li><a data-action="collapse"></a></li>
@@ -37,48 +37,58 @@ Dashboard - Administrasi
 			                	</ul>
 		                	</div>
 						</div>
-						<div class="panel-heading">
-							<a href="{{base_url('superuser/artikel/create')}}"><button type="button" class="btn bg-teal-400 btn-labeled"><b><i class="icon-plus-circle2"></i></b> Tambah Artikel</button></a>
-						</div>
+						{{-- <div class="panel-heading">
+							<a href="{{base_url('superuser/peserta/create')}}"><button type="button" class="btn bg-teal-400 btn-labeled"><b><i class="icon-plus-circle2"></i></b> Tambah Peserta</button></a>
+						</div> --}}
 						<table class="table table-striped datatable-basic table-lg table-responsive">
 		                    <thead>
 		                        <tr>
 		                        	<th>No</th>
-		                        	<th>Gambar</th>
-		                            <th>Artikel</th>
-		                            <th>Kategori</th>
-		                            <th>Di Lihat</th>
-		                            <th>Status</th>
-		                            <th class="text-center">Aksi</th>
+		                            <th>Peserta</th>
+		                            <th style="width: 100px!important;">Sekolah</th>
+		                            <th>Bidang</th>
+		                            <th>Masa Magang</th>
+		                            <th>Verifikasi</th>
+		                            <th class="text-center">Surat Pengantar</th>
+		                            <th class="text-center">Proposal</th>
 		                        </tr>
 		                    </thead>
 		                    <tbody>
-		                    	@foreach($artikel as $key => $result)
+		                    	@foreach($peserta as $key => $result)
 		                         <tr>
 		                        	<td align="center">{{($key+1)}}</td>
-			                        <td>
-				                        <a href="{{$result->cover}}" data-popup="lightbox">
-					                        <img src="{{img_artikel($result->cover)}}" alt="{{$result->cover}}" class="img-rounded img-preview" style="object-fit: cover;height: 70px;">
-				                        </a>
-			                        </td>
 			                        <td style="width:300px;">
-			                        	<a href="{{base_url('superuser/artikel/update/'.$result->id_artikel.'/'.seo($result->judul))}}">
-			                        		<b>{{ucwords(read_more($result->judul,30))}}</b>
+			                        	<a href="{{base_url('superuser/peserta/update/'.$result->id_peserta)}}">
+			                        		<b>{{ucwords(read_more($result->nm_peserta,30))}}</b>
 			                        	</a><br>
 			                        	<span class="text-size-mini">
-			                        	Tanggal Publish : {{tgl_indo($result->created_at)}}
+			                        	Email : {{$result->email}}
 			                        	</span><br>
-			                        	<span class="text-size-small text-muted">
-			                        		{{read_more(strip_tags($result->deskripsi),30)}}
+			                        	<span class="text-size-mini">
+			                        	Telepon : {{$result->telephone}}
+			                        	</span><br>
+			                        </td>
+			                        <td style="width:300px;">
+			                        	<span class="text-size-mini">
+			                        	Jenjang : {{$result->jenjang_pendidikan}}
+			                        	</span><br>
+			                        	<span class="text-size-mini">
+			                        	Sekolah : {{$result->nm_sekolah}}
+			                        	</span><br>
+			                        	<span class="text-size-mini">
+			                        	Program Studi : {{$result->program_studi}}
+			                        	</span><br>
+			                        </td>
+			                        <td align="center">
+			                        	<span class="text-size-mini">{{$result->nm_bidang}}</span>
+			                        </td>
+			                        <td align="center">
+			                        	<span class="text-size-mini">
+			                        	Awal Magang : {{$result->awal_magang}}
+			                        	</span><br>
+			                        	<span class="text-size-mini">
+			                        	Akhir Magang : {{$result->akhir_magang}}
 			                        	</span>
-			                        </td>
-			                        <td align="center">
-			                        	<a href="{{base_url('superuser/kategori/'.$result->id_kategori)}}">
-			                        		<span class="label label-warning"><i class="fa fa-tags"></i> &nbsp;{{read_more(@$result->nama,20)}}</span>
-			                        	</a>
-			                        </td>
-			                        <td align="center">
-			                        	<span class="label label-success"><i class="icon-eye"></i> &nbsp;{{$result->view}} Di Lihat</span>
 			                        </td>
 			                        <td align="center">
 			                        	@if($result->status==1)
@@ -87,24 +97,35 @@ Dashboard - Administrasi
 			                        		<span class="label label-primary label-icon" data-popup="tooltip" title="Terpublikasikan"><i class="icon-check"></i></span>
 			                        	@endif
 			                        </td>
-			                      
 			                        <td class="text-center">
 			                           <div class="btn-group">
-					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i> Action <span class="caret"></span></button>
+					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i><span class="caret"></span></button>
 					                    	<ul class="dropdown-menu dropdown-menu-right">
-					                    		<li>
-													<a href="{{base_url('main/news/detail/'.$result->id_artikel.'/'.seo($result->judul))}}" target="_blank">
-														<i class="fa fa-eye"></i> Lihat Artikel Website
-													</a>
-												</li>
 												<li>
-													<a href="{{base_url('superuser/artikel/update/'.$result->id_artikel.'/'.seo($result->judul))}}">
-														<i class="fa fa-edit"></i> Ubah Artikel
+													<a href="{{base_url('superuser/peserta/update/'.$result->id_peserta)}}">
+														<i class="fa fa-edit"></i> Cetak
 													</a>
 												</li>
 												<li><a href="javascript:void(0)" onclick="deleteIt(this)" 
-												data-url="{{base_url('superuser/artikel/deleted/'.$result->id_artikel.'/'.seo($result->judul))}}">
-														<i class="fa fa-trash"></i> Hapus Artikel
+												data-url="{{base_url('superuser/peserta/deleted/'.$result->id_peserta)}}">
+														<i class="fa fa-trash"></i> Simpan
+													</a>
+												</li>
+											</ul>
+										</div>
+			                        </td>
+			                        <td class="text-center">
+			                           <div class="btn-group">
+					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i><span class="caret"></span></button>
+					                    	<ul class="dropdown-menu dropdown-menu-right">
+												<li>
+													<a href="{{base_url('superuser/peserta/update/'.$result->id_peserta)}}">
+														<i class="fa fa-edit"></i> Cetak
+													</a>
+												</li>
+												<li><a href="javascript:void(0)" onclick="deleteIt(this)" 
+												data-url="{{base_url('superuser/peserta/deleted/'.$result->id_peserta)}}">
+														<i class="fa fa-trash"></i> Simpan
 													</a>
 												</li>
 											</ul>

@@ -118,7 +118,7 @@
 				</li> --}}
 			</ul>
 
-			<p class="navbar-text"><a href="{{base_url()}}"><span class="label bg-success">LIHAT WEB</span></a></p>
+			{{-- <p class="navbar-text"><a href="{{base_url()}}"><span class="label bg-success">LIHAT WEB</span></a></p> --}}
 
 			<ul class="nav navbar-nav navbar-right">
 
@@ -279,8 +279,8 @@
 								<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
 								<li class="{{match($menu,'dashboard','active')}}"><a href="{{base_url('superuser')}}"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
 								<li class="{{match($menu,'config','active')}}"><a href="{{base_url('superuser/config')}}"><i class="icon-gear"></i> <span>Configurasi Website</span></a></li>
-								<li class="{{match($menu,'bidang','active')}}"><a href="{{base_url('superuser/bidang')}}"><i class="icon-images2"></i> <span>Bidang</span></a></li>
-								<li class="{{match($menu,'peserta','active')}}"><a href="{{base_url('superuser/peserta')}}"><i class="icon-home4"></i> <span>Peserta</span></a></li>
+								<li class="{{match($menu,'bidang','active')}}"><a href="{{base_url('superuser/bidang')}}"><i class="icon-gear"></i> <span>Bidang</span></a></li>
+								<li class="{{match($menu,'peserta','active')}}"><a href="{{base_url('superuser/peserta')}}"><i class="icon-users"></i> <span>Peserta</span></a></li>
 								<!-- /main -->
 							</ul>
 						</div>

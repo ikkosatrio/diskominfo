@@ -14,6 +14,7 @@ class Superuser extends CI_Controller {
 		$this->load->library('session');
 		$this->load->model('m_config');
 		$this->load->model('m_bidang');
+		$this->load->model('m_peserta');
 		$this->data['config'] = $this->m_config->ambil('config',1)->row();
 	}
 
@@ -116,6 +117,7 @@ class Superuser extends CI_Controller {
 	{
 		$data         = $this->data;
 		$data['menu'] = "peserta";
+		$data['peserta'] = $this->m_peserta->tampil_data('peserta')->result();
 		echo $this->blade->nggambar('admin.peserta.index',$data);
 		return;
 	}
