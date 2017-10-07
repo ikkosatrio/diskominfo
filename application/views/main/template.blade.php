@@ -28,8 +28,8 @@
     <script type="text/javascript" src="{{base_url()}}assets/main/js/jquery.elastislide.js"></script>
     <script type="text/javascript" src="{{base_url()}}assets/main/js/jquery.tweet.js"></script>
     <script type="text/javascript" src="{{base_url()}}assets/main/js/smoothscroll.js"></script>
-    <script type="text/javascript" src="{{base_url()}}assets/main/js/jquery.ui.totop.js"></script>
-    <script type="text/javascript" src="{{base_url()}}assets/main/js/main.js"></script>
+    {{-- <script type="text/javascript" src="{{base_url()}}assets/main/js/jquery.ui.totop.js"></script> --}}
+    {{-- <script type="text/javascript" src="{{base_url()}}assets/main/js/main.js"></script> --}}
     <script type="text/javascript" src="{{base_url()}}assets/main/js/ajax-mail.js"></script>
     <script type="text/javascript" src="{{base_url()}}assets/main/js/accordion.settings.js"></script>
     <!--[if lt IE 9]>
@@ -39,44 +39,6 @@
     
     
     <!-- GRITTER NOTIF -->
-            
-            <script type="text/javascript">
-            function notifsukses(x,y){
-                jQuery.gritter.add({
-                    title: x,
-                    text: y,
-                    class_name: 'gritter-success'
-                });
-                return false;
-            }
-            function notiferror(x,y){
-                jQuery.gritter.add({
-                    title: x,
-                    text: y,
-                    class_name: 'gritter-error'
-                });
-                return false;
-            }
-            function NewWindow(mypage,myname,w,h,scroll){
-                LeftPosition = (screen.width) ? (screen.width-w)/2 : 0;
-                TopPosition = (screen.height) ? 0 : 0;
-                settings = 'height='+h+',width='+w+',top='+TopPosition+',left='+LeftPosition+',scrollbars='+scroll+',resizable'
-                win = window.open(mypage,myname,settings)
-                if(win.window.focus){
-                    win.window.focus();
-                }
-            }
-            </script>
-
-            <script type="text/javascript">
-            function qh() {
-                if (confirm("Yakin Hapus Data ?")){
-                    return true;
-                }else{
-                    return false;
-                }
-            }
-            </script>
             <!-- GRITTER NOTIF -->
             
 </head>
@@ -110,9 +72,7 @@
         </header>
 
         @yield("content")
-            <!-- sidebar -->
             
-            <!-- sidebar -->
         </div>
             </div>
         </div>

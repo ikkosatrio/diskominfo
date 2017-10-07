@@ -7,7 +7,8 @@ class Authentication extends CI_Controller {
 		parent::__construct();
 		$this->load->model('m_config');
 		$this->data['config'] 			= $this->m_config->ambil('config',1)->row();
-		$this->load->model('m_member');
+		$this->load->model('m_user');
+		$this->load->model('m_peserta');
 		$this->load->library('session');
 		$this->load->library('magicmailer');
 		$this->blade->sebarno('controller', $this);
@@ -38,11 +39,12 @@ class Authentication extends CI_Controller {
 
 				$rules = [
 						    'required' 	=>	[
-						    					['username'],['email'],['password'],['alamat'],['kelamin'],['passwordconf'],['agree'],['phone']
+						    					['nama'],['jenjang'],['sekolah'],['program_studi'],['email'],['password'],['passwordconf']
 						    				],
 						   	'email' 	=> [
 						   						['email']
-						   	],
+						   	]
+						   	,
 						   	'lengthMin' => [
 						        ['password', 8],
 						        ['passwordconf', 8]
@@ -65,9 +67,9 @@ class Authentication extends CI_Controller {
 						  );
 
 
-				$check		= $this->m_member->detail($where,'member')->row();
+				$check		= $this->m_user->detail($where,'user')->row();
 
-				if(isset($check->id_member)){
+				if(isset($check->id_user)){
 						echo goResult(false,"Opps! Email Yang Anda Pakai , Telah Di Gunakan");
 						return;	
 						if($check->status == 0 ){
@@ -76,41 +78,23 @@ class Authentication extends CI_Controller {
 						}
 				}
 
-				$data_member = array(
-					'name'          => $this->input->post('username'),
-					'email'         => $this->input->post('email'),
-					'phone'         => $this->input->post('phone'),
-					'gender'        => $this->input->post('kelamin'),
-					'password'      => sha1(md5($this->input->post('password'))),
-					'address'       => $this->input->post('alamat'),
-					'lastlog'       => date('Y-m-d H:i:s '),
-					'ipaddress'     => $this->input->ip_address()
+				$data_user = array(
+					'nm_user'  => $this->input->post('email'),
+					'email'    => $this->input->post('email'),
+					'password' => sha1(md5($this->input->post('password'))),
 				);
 
-				if($member=$this->m_member->input_data($data_member,'member')){
-					$where = array('id_member' => $member );
-					$mail 					= new Magicmailer;
-					$email['config']		= $data['config'];
-					$email['member']		= $this->m_member->detail($where,'member')->row();
-				    $mail->addAddress($this->input->post('email'), $this->input->post('name'));
-				    $mail->Body    			= $this->blade->nggambar('email.member.register',$email);	
-				    $mail->Subject 			= 'Email Konfirmasi Pendaftaran Member';
-			    	$mail->AltBody 			= 'Email Konfirmasi Pendaftaran Member - '.$data['config']->name;
-					if($mail->send()){
-						if(isset($check->id_member)){
-							if($check->status==0){
-								$this->m_member->hapus_data($check->id_member,'member');
-							}
-						}	
-						echo goResult(true,'Pendaftaran Behasil , Silahkan Cek Inbox / Spam Email Anda Untuk Konfirmasi');	
-						return;
+				if($user=$this->m_user->input_data($data_user,'user')){
+					$data_peserta = array(
+						'nm_peserta'         => $this->input->post('nama'),
+						'jenjang_pendidikan' => $this->input->post('jenjang'),
+						'nm_sekolah'         => $this->input->post('sekolah'),
+						'program_studi'      => $this->input->post('program_studi'),
+						'id_user'            => $user
+					);
+					if($this->m_peserta->input_data($data_peserta,'peserta')){
+						echo goResult(true,'Sukses');	
 					}
-						else {
-							$where = array('id_member' => $member );
-							$this->m_member->hapus_data($where,'member');
-							echo goResult(false,'Opps! Email Konfirmasi Tidak Terkirim Silahkan Coba Kembali');	
-							return;
-						}
 				}
 				else {
 					echo goResult(false,'Ada Yang Salah Silahkan Coba Kembali Nanti');						
@@ -181,7 +165,7 @@ class Authentication extends CI_Controller {
 
 				$rules = [
 						    'required' 	=>	[
-						    					['email'],
+						    					['username'],
 						    					['password'],
 						    				]
 						];
@@ -193,38 +177,26 @@ class Authentication extends CI_Controller {
 
 
 				$where 	= array(
-							'email' 	=> $this->input->post('email'),
+							'nm_user' 	=> $this->input->post('username'),
 							'password'	=> sha1(md5($this->input->post('password'))),
 						  );
 
 
-				$authmember	= $this->m_member->detail($where,'member')->row();
+				$authmember	= $this->m_user->detail($where,'user')->row();
 				
 		
-				if(!isset($authmember->id_member)){
+				if(!isset($authmember->id_user)){
 					echo goResult(false,"Opps! Authentication Gagal , check Email Dan Password!");
 					return;
 				}
-				
-				if($authmember->status == 0){
-					echo goResult(false,"Konfirmasikan Email Anda Terlebih Dahulu");
-					return;
-				}
-				
-				$data_member = array(
-					'lastlog'       => date('Y-m-d H:i:s '),
-					'ipaddress'     => $this->input->ip_address()
-				);
-
-				$this->m_member->update_data($where,$data_member,'member');
 
 
 				$newdata = array(
-								   'authmember_name'	=>  $authmember->name,
+								   'authmember_name'	=>  $authmember->nm_user,
 								   'authmember_email'	=>	$authmember->email,
 								   'authmember'			=>	TRUE,
-								   'authmember_id'		=> 	$authmember->id_member,
-								   'authmember_status'		=> 	$authmember->status_member,
+								   'authmember_id'		=> 	$authmember->id_user,
+								   'authmember_role'		=> 	$authmember->role
 		               		);
 
 				$this->session->set_userdata($newdata);

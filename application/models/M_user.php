@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class M_peserta extends CI_Model {
+class M_user extends CI_Model {
 
 	public $variable;
 
@@ -38,5 +38,5 @@ class M_peserta extends CI_Model {
 
 }
 
-/* End of file M_peserta.php */
-/* Location: ./application/models/M_peserta.php */
+/* End of file M_user.php */
+/* Location: ./application/models/M_user.php */

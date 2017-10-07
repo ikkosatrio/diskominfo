@@ -15,12 +15,11 @@
 						<div class="block-grey" style="height: 300px">
 						    <div class="block-light">
 						        <div class="wrapper">
-									<ol>
-									    <li>?</li>
-									    <li>??</li>
-									    <li>???</li>
-									    <li>????</li>
-									</ol>
+								  	<ul class="list-group">
+									  <li class="list-group-item">New <span class="badge">12</span></li>
+									  <li class="list-group-item">Deleted <span class="badge">5</span></li> 
+									  <li class="list-group-item">Warnings <span class="badge">3</span></li> 
+									</ul>
 								        <!-- FORM -->
 									<script src="jquery-1.10.2.min.js"></script>
 									<script src="jquery.chained.min.js"></script>

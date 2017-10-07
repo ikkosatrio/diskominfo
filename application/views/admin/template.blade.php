@@ -216,7 +216,7 @@
 				<li class="dropdown dropdown-user">
 					<a class="dropdown-toggle" data-toggle="dropdown">
 						<img src="{{img_holder('profile')}}" alt="">
-						<span>{{ucwords($ctrl->session->userdata('nama'))}}</span>
+						<span>{{$ctrl->session->userdata('authmember_name')}}</span>
 						<i class="caret"></i>
 					</a>
 
@@ -226,7 +226,7 @@
 						<li><a href="#"><span class="badge bg-teal-400 pull-right">58</span> <i class="icon-comment-discussion"></i> Messages</a></li>
 						<li class="divider"></li> --}}
 						{{-- <li><a href="#"><i class="icon-cog5"></i> Account settings</a></li> --}}
-						<li><a href="{{base_url()}}auth/keluar"><i class="icon-switch2"></i> Logout</a></li>
+						<li><a href="{{base_url('authentication/logout')}}"><i class="icon-switch2"></i> Logout</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -251,9 +251,9 @@
 							<div class="media">
 								<a href="#" class="media-left"><img src="{{img_holder('profile')}}" class="img-circle img-sm" alt=""></a>
 								<div class="media-body">
-									<span class="media-heading text-semibold">{{ucwords($ctrl->session->userdata('nama'))}}</span>
+									<span class="media-heading text-semibold">{{ucwords($ctrl->session->userdata('authmember_role'))}}</span>
 									<div class="text-size-mini text-muted">
-										<i class="icon-pin text-size-small"></i> &nbsp;Santa Ana, CA
+										<i class="icon-pin text-size-small"></i> {{$ctrl->session->userdata('authmember_name')}}
 									</div>
 								</div>
 
@@ -278,9 +278,11 @@
 								<!-- Main -->
 								<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
 								<li class="{{match($menu,'dashboard','active')}}"><a href="{{base_url('superuser')}}"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
-								<li class="{{match($menu,'config','active')}}"><a href="{{base_url('superuser/config')}}"><i class="icon-gear"></i> <span>Configurasi Website</span></a></li>
-								<li class="{{match($menu,'bidang','active')}}"><a href="{{base_url('superuser/bidang')}}"><i class="icon-gear"></i> <span>Bidang</span></a></li>
-								<li class="{{match($menu,'peserta','active')}}"><a href="{{base_url('superuser/peserta')}}"><i class="icon-users"></i> <span>Peserta</span></a></li>
+								@if ($ctrl->session->userdata('authmember_role')=="admin")
+									<li class="{{match($menu,'config','active')}}"><a href="{{base_url('superuser/config')}}"><i class="icon-gear"></i> <span>Configurasi Website</span></a></li>
+									<li class="{{match($menu,'bidang','active')}}"><a href="{{base_url('superuser/bidang')}}"><i class="icon-gear"></i> <span>Bidang</span></a></li>
+									<li class="{{match($menu,'peserta','active')}}"><a href="{{base_url('superuser/peserta')}}"><i class="icon-users"></i> <span>Peserta</span></a></li>
+								@endif
 								<!-- /main -->
 							</ul>
 						</div>

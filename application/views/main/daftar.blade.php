@@ -9,7 +9,7 @@
                     <!-- page content -->
                     <section id="page-sidebar" class="alignleft span8">
                         <div class="title-divider">
-   <h3>Pendaftaran Mahasiswa SIM TKP UNTAG Surabaya</h3>
+   <h3>Pendaftaran Peserta</h3>
    <div class="divider-arrow"></div>
 </div>
 <div class="block-grey">
@@ -17,51 +17,55 @@
         <div class="wrapper">
 		<h3>Harap isi sesuai dengan biodata Anda</h3>
         <!-- FORM -->
-	<form method="POST" enctype="multipart/form-data" class="form-horizontal">
+	<form method="POST" id="form-registration" enctype="multipart/form-data" class="form-horizontal" action="{{base_url('authentication/register/member')}}">
 		<div class="control-group">
-			<label class="control-label" for="nim"><b>NBI</b></label>
+			<label class="control-label" for="nim"><b>Nama Peserta</b></label>
 			<div class="controls">
-				<input class="input-large" type="text" id="nim" name="nim" required=""><font color="red"> *</font>
+				<input class="input-large" type="text" id="nama" name="nama" required=""><font color="red"> *</font>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="nama"><b>Nama</b></label>
+			<label class="control-label" for="bidang_minat"><b>Jenjang Pendidikan</b></label>
 			<div class="controls">
-				<input class="input-xlarge" type="text" id="nama" name="nama" required=""><font color="red"> *</font>
+				<select class="span3 chosen-select" name="jenjang" id="jenjang">
+					<option value="">==Pilih Jenjang==</option>
+					<option value="SMK">SMK</option>
+					<option value="D3">D3</option>
+					<option value="D4">D4</option>
+					<option value="Perguruan Tinggi">Perguruan Tinggi</option>				
+				</select><font color="red"> *</font>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="bidang_minat"><b>Bidang Minat</b></label>
+			<label class="control-label" for="nama"><b>Nama Sekolah / PT</b></label>
 			<div class="controls">
-				<select class="span3 chosen-select" name="bidang_minat" id="bidang_minat">
-					<option value="1">Sistem Informasi Bisnis</option><option value="2">Teknologi Multimedia dan Bergerak</option><option value="3">Kecerdasan Buatan dan Visi Komputer</option><option value="4">Teknologi Perangkat Keras dan Jaringan Komputer</option>				</select><font color="red"> *</font>
+				<input class="input-xlarge" type="text" id="sekolah" name="sekolah" required=""><font color="red"> *</font>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="telp"><b>Telp/HP/WA</b></label>
+			<label class="control-label" for="telp"><b>Program Studi</b></label>
 			<div class="controls">
-				<input class="input-medium" type="text" id="telp" name="telp" required=""><font color="red"> *</font>
+				<input class="input-medium" type="text" id="program_studi" name="program_studi" required=""><font color="red"> *</font>
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label" for="email"><b>Email</b></label>
+			<label class="control-label" for="telp"><b>Email / Username</b></label>
 			<div class="controls">
-				<input class="input-xlarge" type="email" id="email" name="email" required=""><font color="red"> *</font>
-			</div>
-		</div>
-		
-		<div class="control-group">
-			<label class="control-label" for="username"><b>Username</b></label>
-			<div class="controls">
-				<input class="input-medium" type="text" id="username" name="username" required=""><font color="red"> *<br>
-				(Isikan Kombinasi Huruf dan Angka Tanpa Simbol Maupun Spasi)</font>
+				<input class="input-medium" type="email" id="email" name="email" required=""><font color="red"> *</font>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label" for="password"><b>Password</b></label>
 			<div class="controls">
 				<input class="input-medium" type="password" id="password" name="password" required=""><font color="red"> *<br>
-				(Isikan Kombinasi Huruf dan Angka Tanpa Simbol Maupun Spasi)</font>
+				(Minimal 8 Karakter)</font>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="password"><b>Konfirmasi Password</b></label>
+			<div class="controls">
+				<input class="input-medium" type="password" id="passwordconf" name="passwordconf" required=""><font color="red"> *<br>
+				(Minimal 8 Karakter)</font>
 			</div>
 		</div>
 		<font color="red"><b>*) Wajib diisi</b></font>
@@ -74,14 +78,26 @@
 			</a>
 		</div>
 	</form>
-	<script src="jquery-1.10.2.min.js"></script>
-	<script src="jquery.chained.min.js"></script>
-	<script>
-			$("#p1").chained("#bidang_minat");
-			$("#p2").chained("#bidang_minat");
-			$("#p3").chained("#bidang_minat");
+	<script type="text/javascript">
+		$("#form-registration").submit(function(e){
+    e.preventDefault();
+    var formData = new FormData( $("#form-registration")[0] );
+
+    $.ajax({
+      url:    $("#form-registration").attr('action'),
+      type:   "POST",
+      data:     new FormData(this),
+          processData: false,
+          contentType: false,
+    })
+    .done(function(data){
+      alert(data.msg)
+    })
+    .fail(function() {
+        alert("something wrong")
+     })
+  })
 	</script>
-	<!-- FORM -->
 		
         </div>
     </div>
