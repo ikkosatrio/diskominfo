@@ -22,10 +22,11 @@
                         {{$ctrl->session->userdata('authmember_name')}}
                     @endif
                     <div class="controls">
-                        <input type="submit" class="btn btn-primary btn-large" value="Login">
+                        
                         @if ($ctrl->session->userdata('authmember'))
                             <input type="button" class="btn btn-success btn-large" value="Menu" onclick="window.location = '{{base_url('superuser')}}';"/>
                         @else
+                            <input type="submit" class="btn btn-primary btn-large" value="Login">
                             <input type="button" class="btn btn-primary btn-large" value="Daftar Baru" onclick="window.location = '{{base_url('main/daftar')}}';"/>
                         @endif
                     </div>
@@ -43,6 +44,7 @@
         })
         .done(function(data){
           alert(data.msg)
+          location.reload();
           var go  = setTimeout(function(){
             redirect("{{base_url('main')}}");
           },1000);

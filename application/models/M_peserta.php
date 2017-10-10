@@ -11,7 +11,8 @@ class M_peserta extends CI_Model {
 	}
 	function tampil_data($table){
 		$this->db->from($table);
-		// $this->db->join('bidang','bidang.id_bidang=peserta.id_bidang');
+		$this->db->join('bidang','bidang.id_bidang=peserta.id_bidang','left');
+		$this->db->join('user','user.id_user=peserta.id_user');
 		return $query = $this->db->get();
 		// return $this->db->get($table);
 	}
@@ -22,7 +23,8 @@ class M_peserta extends CI_Model {
 	}
 
 	function detail($where,$table){	
-		// $this->db->join('bidang','bidang.id_bidang=bidang.id_bidang');
+		$this->db->join('bidang','bidang.id_bidang=peserta.id_bidang','left');
+		$this->db->join('user','user.id_user=peserta.id_user');
 		return $this->db->get_where($table,$where);
 	}
 

@@ -79,7 +79,7 @@
 		</div>
 	</form>
 	<script type="text/javascript">
-		$("#form-registration").submit(function(e){
+	$("#form-registration").submit(function(e){
     e.preventDefault();
     var formData = new FormData( $("#form-registration")[0] );
 

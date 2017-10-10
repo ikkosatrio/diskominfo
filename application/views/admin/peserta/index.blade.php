@@ -91,23 +91,44 @@ Dashboard - Administrasi
 			                        	</span>
 			                        </td>
 			                        <td align="center">
-			                        	@if($result->status==1)
+			                        	{{-- @if($result->status==1)
 			                        		<span class="label label-default label-icon" data-popup="tooltip" title="Draft"><i class="icon-pencil5"></i></span>
 			                        	@else
 			                        		<span class="label label-primary label-icon" data-popup="tooltip" title="Terpublikasikan"><i class="icon-check"></i></span>
-			                        	@endif
+			                        	@endif --}}
+			                        	<div class="btn-group">
+					                    	@if($result->status==1)
+						                    	<button type="button" class="btn btn-success btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-checkmark4 position-left"></i><span class="caret"></span></button>
+						                    	<ul class="dropdown-menu dropdown-menu-right">
+													<li>
+														<a href="javascript:void(0)" onclick="verifikasi(this,true)" url="{{base_url('superuser/peserta/unverified/'.$result->id_peserta)}}">
+															<i class="fa fa-edit"></i> UNVERIFIED
+														</a>
+													</li>
+												</ul>
+											@else
+												<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cross2 position-left"></i><span class="caret"></span></button>
+						                    	<ul class="dropdown-menu dropdown-menu-right">
+													<li>
+														<a href="javascript:void(0)" onclick="verifikasi(this,true)" url="{{base_url('superuser/peserta/verified/'.$result->id_peserta)}}">
+															<i class="fa fa-edit"></i> VERIFIED
+														</a>
+													</li>
+												</ul>
+											@endif
+										</div>
 			                        </td>
 			                        <td class="text-center">
 			                           <div class="btn-group">
 					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i><span class="caret"></span></button>
 					                    	<ul class="dropdown-menu dropdown-menu-right">
 												<li>
-													<a href="{{base_url('superuser/peserta/update/'.$result->id_peserta)}}">
+													<a href="{{base_url()}}assets/files/surat/{{$result->surat_magang}}">
 														<i class="fa fa-edit"></i> Cetak
 													</a>
 												</li>
 												<li><a href="javascript:void(0)" onclick="deleteIt(this)" 
-												data-url="{{base_url('superuser/peserta/deleted/'.$result->id_peserta)}}">
+												data-url="{{base_url()}}assets/files/surat/{{$result->surat_magang}}">
 														<i class="fa fa-trash"></i> Simpan
 													</a>
 												</li>
@@ -119,12 +140,11 @@ Dashboard - Administrasi
 					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i><span class="caret"></span></button>
 					                    	<ul class="dropdown-menu dropdown-menu-right">
 												<li>
-													<a href="{{base_url('superuser/peserta/update/'.$result->id_peserta)}}">
+													<a href="{{base_url()}}assets/files/proposal/{{$result->proposal_magang}}">
 														<i class="fa fa-edit"></i> Cetak
 													</a>
 												</li>
-												<li><a href="javascript:void(0)" onclick="deleteIt(this)" 
-												data-url="{{base_url('superuser/peserta/deleted/'.$result->id_peserta)}}">
+												<li><a href="{{base_url()}}assets/files/proposal/{{$result->proposal_magang}}">
 														<i class="fa fa-trash"></i> Simpan
 													</a>
 												</li>
@@ -142,4 +162,44 @@ Dashboard - Administrasi
 				<!-- /content area -->
 
 			</div>
+	<script type="text/javascript">
+		function verifikasi(that,rule){
+			var url = $(that).attr('url');
+			
+			$.ajax({
+		        url:  url,
+		        type:   "POST",
+		        data:   '',
+		        beforeSend: function(){
+		          blockMessage($('html'),'Please Wait , Processing','#fff');    
+		        }
+		      })
+		      .done(function(data){
+		        $('html').unblock();
+
+		        sweetAlert({
+					title: 	((data.auth==false) ? "Opps!" : '{{"Proses Selesai"}}'),
+					text: 	data.msg,
+					type: 	((data.auth==false) ? "error" : "success"),
+				},
+				function(){
+					if(data.auth!=false){
+						redirect("{{base_url('superuser/peserta')}}");		
+						return;
+					}
+				});
+		      })
+		      .fail(function() {
+		          $('html').unblock();
+		        sweetAlert({
+		          title:  "Opss!",
+		          text:   "Something Wrong , Try Again Later",
+		          type:   "error",
+		        },
+		        function(){
+		        
+		        });
+		       })
+		}
+	</script>
 @endsection

@@ -7,22 +7,35 @@ class Superuser extends CI_Controller {
 	{
 		parent::__construct();
 
-		// if(!$this->session->userdata('auth')){
-		// 	redirect('auth');
-		// }
+		if(!$this->session->userdata('authmember')){
+			redirect('main');
+		}
 		$this->blade->sebarno('ctrl', $this);
 		$this->load->library('session');
 		$this->load->model('m_config');
 		$this->load->model('m_bidang');
 		$this->load->model('m_peserta');
+		$this->load->model('m_user');
 		$this->data['config'] = $this->m_config->ambil('config',1)->row();
 	}
 
 	public function index()
 	{	
-		$data 		= $this->data;
-		$data['menu'] = "dashboard";
-		echo $this->blade->nggambar('admin.home',$data);
+		$data            = $this->data;
+		$data['menu']    = "dashboard";
+		$where           = array('peserta.id_user' => $this->session->userdata('authmember_id'));
+		
+		if($this->session->userdata('authmember_role')=='admin' || $this->session->userdata('authmember_role')=='kominfo' ){
+			$where        = array('id_user' => $this->session->userdata('authmember_id'));
+			$data['user'] = $this->m_user->detail($where,'user')->row();
+			echo $this->blade->nggambar('admin.home',$data);
+		}else{
+			$where           = array('peserta.id_user' => $this->session->userdata('authmember_id'));
+			$data['bidang']  = $this->m_bidang->tampil_data('bidang')->result();
+			$data['peserta'] = $this->m_peserta->detail($where,'peserta')->row();
+			echo $this->blade->nggambar('admin.peserta.biodata',$data);
+		}
+		
 	}
 	
 	// Start Config
@@ -113,13 +126,166 @@ class Superuser extends CI_Controller {
 	// End Config
 
 	// Start Peserta
-	public function peserta($type=null)
+	public function peserta($url=null,$id=null)
 	{
 		$data         = $this->data;
 		$data['menu'] = "peserta";
 		$data['peserta'] = $this->m_peserta->tampil_data('peserta')->result();
-		echo $this->blade->nggambar('admin.peserta.index',$data);
-		return;
+		
+		if ($url=="verified") {
+			$where = array(
+					'id_peserta' => $id 
+				);
+			$data = array(
+					'status' => 1
+				);
+
+			if($this->m_peserta->update_data($where,$data,'peserta')){
+				echo goResult(true,"Data Telah Di Verifikasi");
+				return;
+			}
+
+		} else if ($url=="unverified") {
+			$where = array(
+					'id_peserta' => $id 
+				);
+			$data = array(
+					'status' => 0
+				);
+
+			if($this->m_peserta->update_data($where,$data,'peserta')){
+				echo goResult(true,"Data Telah Di Verifikasi");
+				return;
+			}
+		}else if($url=="updated"){
+			$surat 		= time().$_FILES['surat']['name'];
+			$surat 		= str_replace(' ', '_', $surat);
+
+			$proposal 		= time().$_FILES['proposal']['name'];
+			$proposal 		= str_replace(' ', '_', $proposal);
+
+			$nama          = $this->input->post('nama');
+			$telephone     = $this->input->post('telephone');
+			$email         = $this->input->post('email');
+			$jenjang       = $this->input->post('jenjang');
+			$sekolah       = $this->input->post('sekolah');
+			$program_studi = $this->input->post('program_studi');
+			$bidang        = $this->input->post('bidang');
+			$awal          = $this->input->post('awal');
+			$akhir         = $this->input->post('akhir');
+
+
+			$where = array(
+					'id_peserta' => $id 
+			);
+
+			if (!empty($_FILES['surat']['name'])) {
+					$upload 	= $this->upload('./assets/files/surat/','surat',$surat);
+					if($upload['auth']	== false){
+						echo goResult(false,$upload['msg']);
+						return;
+					}
+					$data = array(
+						'nm_peserta'         => $nama,
+						'telephone'          => $telephone,
+						'jenjang_pendidikan' => $jenjang,
+						'nm_sekolah'         => $sekolah,
+						'program_studi'      => $program_studi,
+						'id_bidang'          => $bidang,
+						'awal_magang'        => $awal,
+						'akhir_magang'       => $akhir,
+						'surat_magang'       => $surat
+					);
+
+					if (!empty($_FILES['proposal']['name'])) {
+						$upload1 	= $this->upload1('./assets/files/proposal/','proposal',$proposal);
+						if($upload1['auth']	== false){
+							echo goResult(false,$upload1['msg']);
+							return;
+						}
+						$data = array(
+							'nm_peserta'         => $nama,
+							'telephone'          => $telephone,
+							'jenjang_pendidikan' => $jenjang,
+							'nm_sekolah'         => $sekolah,
+							'program_studi'      => $program_studi,
+							'id_bidang'          => $bidang,
+							'awal_magang'        => $awal,
+							'akhir_magang'       => $akhir,
+							'surat_magang'       => $surat,
+							'proposal_magang'    => $proposal
+
+						);
+					}else{
+
+						$data = array(
+							'nm_peserta'         => $nama,
+							'telephone'          => $telephone,
+							'jenjang_pendidikan' => $jenjang,
+							'nm_sekolah'         => $sekolah,
+							'program_studi'      => $program_studi,
+							'id_bidang'          => $bidang,
+							'awal_magang'        => $awal,
+							'akhir_magang'       => $akhir,
+							'surat_magang'       => $surat
+						);
+					}
+
+				}else{
+					if (!empty($_FILES['proposal']['name'])) {
+						$upload1 	= $this->upload1('./assets/files/proposal/','proposal',$proposal);
+						if($upload1['auth']	== false){
+							echo goResult(false,$upload1['msg']);
+							return;
+						}
+						$data = array(
+							'nm_peserta'         => $nama,
+							'telephone'          => $telephone,
+							'jenjang_pendidikan' => $jenjang,
+							'nm_sekolah'         => $sekolah,
+							'program_studi'      => $program_studi,
+							'id_bidang'          => $bidang,
+							'awal_magang'        => $awal,
+							'akhir_magang'       => $akhir,
+							'proposal_magang'    => $proposal
+
+						);
+					}else{
+
+						$data = array(
+							'nm_peserta'         => $nama,
+							'telephone'          => $telephone,
+							'jenjang_pendidikan' => $jenjang,
+							'nm_sekolah'         => $sekolah,
+							'program_studi'      => $program_studi,
+							'id_bidang'          => $bidang,
+							'awal_magang'        => $awal,
+							'akhir_magang'       => $akhir
+						);
+					}
+
+					// $data = array(
+					// 	'nm_peserta'         => $nama,
+					// 	'telephone'          => $telephone,
+					// 	'jenjang_pendidikan' => $jenjang,
+					// 	'nm_sekolah'         => $sekolah,
+					// 	'program_studi'      => $program_studi,
+					// 	'id_bidang'          => $bidang,
+					// 	'awal_magang'        => $awal,
+					// 	'akhir_magang'       => $akhir
+					// );
+				}
+
+			if($this->m_peserta->update_data($where,$data,'peserta')){
+				echo goResult(true,"Data Telah Di Update");
+				return;
+			}
+
+		}else{	
+			echo $this->blade->nggambar('admin.peserta.index',$data);
+			return;
+		}
+
 	}
 	// End Peserta
 	
@@ -169,10 +335,10 @@ class Superuser extends CI_Controller {
 			$tahun = $this->input->post('tahun');
 		
 			$data = array(
-				'nm_bidang'       => $nama,
-				'kuota'   => $kuota,
-				'bulan' => $bulan,
-				'tahun' => $tahun
+				'nm_bidang' => $nama,
+				'kuota'     => $kuota,
+				'bulan'     => $bulan,
+				'tahun'     => $tahun
 			);
 
 			if($this->m_bidang->update_data($where,$data,'bidang')){
@@ -196,11 +362,36 @@ class Superuser extends CI_Controller {
 
 
 
+
 	//---------------------------------------------------------------------
 	//--------------------------------------------------------fungsi global
 	private function upload($dir,$name ='userfile',$filename=null){
 		$config['upload_path']      = $dir;
-        $config['allowed_types']    = 'gif|jpg|png|jpeg';
+        $config['allowed_types']    = 'gif|jpg|png|jpeg|docx|doc|pdf';
+        $config['max_size']         = 8000;
+        $config['encrypt_name'] 	= FALSE;
+        $config['file_name'] 		= $filename;
+
+        $this->load->library('upload', $config);
+
+        if ( ! $this->upload->do_upload($name))
+        {		
+        		$data['auth'] 	= false;
+                $data['msg'] 	= $this->upload->display_errors();
+                return $data;
+        }
+        else
+        {
+        		$data['auth']	= true;
+        		$data['msg']	= $this->upload->data();
+        		return $data;
+        }
+	}
+
+	private function upload1($dir,$name ='user',$filename=null){
+		// echo $filename;
+		$config['upload_path']      = $dir;
+        $config['allowed_types']    = 'gif|jpg|png|jpeg|docx|doc|pdf';
         $config['max_size']         = 8000;
         $config['encrypt_name'] 	= FALSE;
         $config['file_name'] 		= $filename;
