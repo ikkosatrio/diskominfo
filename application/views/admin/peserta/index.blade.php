@@ -122,11 +122,11 @@ Dashboard - Administrasi
 			                           <div class="btn-group">
 					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i><span class="caret"></span></button>
 					                    	<ul class="dropdown-menu dropdown-menu-right">
-												<li>
+												{{-- <li>
 													<a href="{{base_url()}}assets/files/surat/{{$result->surat_magang}}">
 														<i class="fa fa-edit"></i> Cetak
 													</a>
-												</li>
+												</li> --}}
 												<li><a href="{{base_url()}}assets/files/surat/{{$result->surat_magang}}">
 														<i class="fa fa-trash"></i> Simpan
 													</a>
@@ -138,11 +138,11 @@ Dashboard - Administrasi
 			                           <div class="btn-group">
 					                    	<button type="button" class="btn btn-danger btn-sm btn-rounded dropdown-toggle" data-toggle="dropdown"><i class="icon-cog5 position-left"></i><span class="caret"></span></button>
 					                    	<ul class="dropdown-menu dropdown-menu-right">
-												<li>
+												{{-- <li>
 													<a href="{{base_url()}}assets/files/proposal/{{$result->proposal_magang}}">
 														<i class="fa fa-edit"></i> Cetak
 													</a>
-												</li>
+												</li> --}}
 												<li><a href="{{base_url()}}assets/files/proposal/{{$result->proposal_magang}}">
 														<i class="fa fa-trash"></i> Simpan
 													</a>
