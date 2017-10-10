@@ -127,8 +127,7 @@ Dashboard - Administrasi
 														<i class="fa fa-edit"></i> Cetak
 													</a>
 												</li>
-												<li><a href="javascript:void(0)" onclick="deleteIt(this)" 
-												data-url="{{base_url()}}assets/files/surat/{{$result->surat_magang}}">
+												<li><a href="{{base_url()}}assets/files/surat/{{$result->surat_magang}}">
 														<i class="fa fa-trash"></i> Simpan
 													</a>
 												</li>
