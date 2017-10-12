@@ -278,7 +278,7 @@
 								<!-- Main -->
 								<li class="navigation-header"><span>Main</span> <i class="icon-menu" title="Main pages"></i></li>
 								<li class="{{match($menu,'dashboard','active')}}"><a href="{{base_url('superuser')}}"><i class="icon-home4"></i> <span>Dashboard</span></a></li>
-								@if ($ctrl->session->userdata('authmember_role')=="admin")
+								@if ($ctrl->session->userdata('authmember_role')=="admin" || $ctrl->session->userdata('authmember_role')=="kominfo")
 									<li class="{{match($menu,'config','active')}}"><a href="{{base_url('superuser/config')}}"><i class="icon-gear"></i> <span>Configurasi Website</span></a></li>
 									<li class="{{match($menu,'bidang','active')}}"><a href="{{base_url('superuser/bidang')}}"><i class="icon-gear"></i> <span>Bidang</span></a></li>
 									<li class="{{match($menu,'peserta','active')}}"><a href="{{base_url('superuser/peserta')}}"><i class="icon-users"></i> <span>Peserta</span></a></li>
