@@ -16,6 +16,7 @@ class Superuser extends CI_Controller {
 		$this->load->model('m_bidang');
 		$this->load->model('m_peserta');
 		$this->load->model('m_user');
+		$this->load->model('m_kelompok');
 		$this->data['config'] = $this->m_config->ambil('config',1)->row();
 	}
 
@@ -136,10 +137,19 @@ class Superuser extends CI_Controller {
 			$where = array(
 					'id_peserta' => $id 
 				);
+			
+			$peserta = $this->m_peserta->detail($where,'peserta')->row();
+			$bidang  = $this->m_bidang->detail(array('id_bidang' => $peserta->id_bidang),'bidang')->row();
+			$kuota   = $bidang->kuota - 1;
+			$data = array(
+					'kuota' => $kuota
+				);
+
+			$this->m_bidang->update_data(array('id_bidang' => $peserta->id_bidang),$data,'bidang');		
+
 			$data = array(
 					'status' => 1
 				);
-
 			if($this->m_peserta->update_data($where,$data,'peserta')){
 				echo goResult(true,"Data Telah Di Verifikasi");
 				return;
@@ -149,10 +159,19 @@ class Superuser extends CI_Controller {
 			$where = array(
 					'id_peserta' => $id 
 				);
+
+			$peserta = $this->m_peserta->detail($where,'peserta')->row();
+			$bidang  = $this->m_bidang->detail(array('id_bidang' => $peserta->id_bidang),'bidang')->row();
+			$kuota = $bidang->kuota + 1;
+			$data = array(
+					'kuota' => $kuota
+				);
+
+			$this->m_bidang->update_data(array('id_bidang' => $peserta->id_bidang),$data,'bidang');
+
 			$data = array(
 					'status' => 0
 				);
-
 			if($this->m_peserta->update_data($where,$data,'peserta')){
 				echo goResult(true,"Data Telah Di Verifikasi");
 				return;
@@ -289,6 +308,74 @@ class Superuser extends CI_Controller {
 	}
 	// End Peserta
 	
+
+	// Start Anggota
+	public function anggota($url=null,$id=null){
+		$data            = $this->data;
+		$data['menu']     = "anggota";
+		$data['peserta']  = $this->m_peserta->tampil_data('peserta')->row();
+		$data['anggota']  = $this->m_kelompok->tampil_data_detail('detail_kelompok')->result();
+		$data['kelompok'] = $this->m_kelompok->detail(array('id_ketua' => $this->session->userdata('authmember_id')),'kelompok')->row();
+		if ($url=="create") {
+			$data['type']			= "create";
+			echo $this->blade->nggambar('admin.peserta.anggota.content',$data);
+			return;
+		}else if ($url=="created" && $this->input->is_ajax_request() == true){
+			
+			$namas  = $this->input->post('namaAnggota[]');
+			
+			$data = array(
+					'id_ketua'      => $this->session->userdata('authmember_id'),
+					'id_pembimbing' => $this->m_user->randomData(array('role' => 'kominfo'),'user')->row()->id_user
+			);
+			$kelompok = $this->m_kelompok->input_data($data,'kelompok');
+			
+			foreach ($namas as $value) {
+				$data = array(
+						'nm_anggota'       => $value,
+						'id_kelompok'	   => $kelompok
+						);
+				$this->m_kelompok->input_data($data,'detail_kelompok');
+			}
+
+			if ($kelompok) {
+				echo goResult(true,"Data Telah Di Tambahkan");
+				return;
+			}
+		}
+		else if ($url=="update" ) {
+			$data['type']			= "update";
+			$data['kelompok']		= $this->m_kelompok->detail(array('id_ketua' => $this->session->userdata('authmember_id')),'kelompok')->row();
+			$data['anggota']		= $this->m_kelompok->tampil_data_detail('detail_kelompok')->result();
+
+			echo $this->blade->nggambar('admin.peserta.anggota.content',$data);
+			return;
+		}else if ($url=="updated" && $id!=null && $this->input->is_ajax_request() == true) {
+			$namas  = $this->input->post('namaAnggota[]');
+			$where = array(
+					'id_kelompok'	   => $id
+			); 
+
+			$this->m_kelompok->hapus_data($where,'detail_kelompok');
+				foreach ($namas as $value) {
+					$data = array(
+							'nm_anggota'       => $value,
+							'id_kelompok'	   => $id
+							);
+					$this->m_kelompok->input_data($data,'detail_kelompok');
+				}
+			
+			echo goResult(true,"Data Telah Di Perbarui");
+			return;			
+		}
+		else{	
+			echo $this->blade->nggambar('admin.peserta.anggota.index',$data);
+			return;
+		}
+	}
+	// End Anggota
+
+
 	// Start Bidang
 	public function bidang($url=null,$id=null)
 	{

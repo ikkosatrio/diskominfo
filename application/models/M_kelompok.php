@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class M_user extends CI_Model {
+class M_kelompok extends CI_Model {
 
 	public $variable;
 
@@ -11,9 +11,13 @@ class M_user extends CI_Model {
 	}
 	function tampil_data($table){
 		$this->db->from($table);
-		// $this->db->join('bidang','bidang.id_bidang=peserta.id_bidang');
 		return $query = $this->db->get();
-		// return $this->db->get($table);
+	}
+
+	function tampil_data_detail($table){
+		$this->db->from($table);
+		$this->db->join('kelompok','kelompok.id_kelompok=detail_kelompok.id_kelompok');
+		return $query = $this->db->get();
 	}
 
 	function input_data($data,$table){
@@ -22,13 +26,7 @@ class M_user extends CI_Model {
 	}
 
 	function detail($where,$table){	
-		// $this->db->join('bidang','bidang.id_bidang=bidang.id_bidang');
-		return $this->db->get_where($table,$where);
-	}
-
-	function randomData($where,$table){	
-		$this->db->order_by('rand()');
-		$this->db->limit(1);
+		$this->db->join('user','user.id_user=kelompok.id_pembimbing');
 		return $this->db->get_where($table,$where);
 	}
 
@@ -44,5 +42,5 @@ class M_user extends CI_Model {
 
 }
 
-/* End of file M_user.php */
-/* Location: ./application/models/M_user.php */
+/* End of file M_kelompok.php */
+/* Location: ./application/models/M_kelompok.php */
