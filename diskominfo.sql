@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-10-10 18:37:30
+Date: 2017-10-29 22:26:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `bidang` (
 -- ----------------------------
 -- Records of bidang
 -- ----------------------------
-INSERT INTO `bidang` VALUES ('1', 'asd askjdhiasgdagsdouagsdasd', '2147483647', 'Desember', '24342');
+INSERT INTO `bidang` VALUES ('1', 'asd askjdhiasgdagsdouagsdasd', '3', 'Desember', '24342');
 INSERT INTO `bidang` VALUES ('2', 'asd', '3', '2134', '234');
 
 -- ----------------------------
@@ -61,6 +61,37 @@ CREATE TABLE `config` (
 INSERT INTO `config` VALUES ('1', 'Diskominfo Magang', '', '083849940637', 'Universitas 17 Agustus 1945 Surabaya', 'Diskominfo Magang<br>', 'icon.png', '', '', 'logo2.png', '												\r\n											', '5', '												\r\n											');
 
 -- ----------------------------
+-- Table structure for detail_kelompok
+-- ----------------------------
+DROP TABLE IF EXISTS `detail_kelompok`;
+CREATE TABLE `detail_kelompok` (
+  `id_kelompok` int(11) DEFAULT NULL,
+  `nm_anggota` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of detail_kelompok
+-- ----------------------------
+INSERT INTO `detail_kelompok` VALUES ('4', 'asd fsdf');
+INSERT INTO `detail_kelompok` VALUES ('4', 'cvb ghjgh');
+
+-- ----------------------------
+-- Table structure for kelompok
+-- ----------------------------
+DROP TABLE IF EXISTS `kelompok`;
+CREATE TABLE `kelompok` (
+  `id_kelompok` int(11) NOT NULL AUTO_INCREMENT,
+  `id_pembimbing` int(11) DEFAULT NULL,
+  `id_ketua` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_kelompok`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of kelompok
+-- ----------------------------
+INSERT INTO `kelompok` VALUES ('4', '4', '3');
+
+-- ----------------------------
 -- Table structure for peserta
 -- ----------------------------
 DROP TABLE IF EXISTS `peserta`;
@@ -79,7 +110,7 @@ CREATE TABLE `peserta` (
   `status` enum('1','0') DEFAULT '0',
   `id_user` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_peserta`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of peserta
@@ -97,10 +128,11 @@ CREATE TABLE `user` (
   `password` varchar(255) DEFAULT NULL,
   `role` enum('peserta','admin','kominfo') DEFAULT 'peserta',
   PRIMARY KEY (`id_user`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'ikko', 'yuhhu', '372afbb1bdca657d06361addc91fa93e1518fb57', 'admin');
 INSERT INTO `user` VALUES ('3', 'asd@gmail.com', 'asd@gmail.com', 'ceedf12f8fe3dc63d35b2567a59b93bd62ff729a', 'peserta');
+INSERT INTO `user` VALUES ('4', 'info', 'info@gmai.com', 'b32a5c2fac69078c6043b4dc705b964e122f19ab', 'kominfo');
